@@ -1,5 +1,6 @@
 package lab.singleList.interfaces;
 
-public interface Comparator {
-    int Comparator(Object o1, Object o2);
+@FunctionalInterface
+public interface Comparator{
+    int compare(Object o1, Object o2);
 }

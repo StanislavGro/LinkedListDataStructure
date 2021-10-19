@@ -1,12 +1,11 @@
 package lab.singleList.interfaces;
 
-import java.util.Comparator;
-
 public interface TypeBuilder {
 
     String typeName();
-    Object create();
+    Object create(int range);
+    lab.singleList.interfaces.Comparator getComparator();
     Object read();
-    Comparator getComparator();
+    void write();
 
 }

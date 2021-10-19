@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class TypeFactory {
 
-    public static final HashMap<String, TypeBuilder> typeFactory;
+    public static final HashMap<String, TypeBuilder> typeFactory; //мапа хранения типов данных и соответсвующих билдеров
 
     static {
 
@@ -17,10 +17,12 @@ public class TypeFactory {
 
     }
 
+    //Возвращает множество типов данных
     public static Set<String> getAllTypes() {
         return typeFactory.keySet();
     }
 
+    //
     public static TypeBuilder getBuilder(String name) {
         return typeFactory.get(name);
     }

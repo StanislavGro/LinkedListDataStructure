@@ -1,11 +1,10 @@
 package lab.singleList.classes;
 
-import lab.singleList.interfaces.DescendingIterator;
 import lab.singleList.interfaces.Linked;
 
 import java.util.Iterator;
 
-public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<E>, DescendingIterator<E>{
+public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<E>{
 
     private Node<E> first;   //первый узел
     private Node<E> last;    //последний узел
@@ -37,26 +36,6 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
             @Override
             public E next() {
                 return getElemByIndex(counter++);
-            }
-        };
-    }
-
-    //итератор по убыванию
-    @Override
-    public Iterator<E> descendingIterator() {
-        return new Iterator<>() {
-            int counter = size - 1;
-
-            //проверка на наличие следующего элемента
-            @Override
-            public boolean hasNext() {
-                return counter >= 0;
-            }
-
-            //получение следующего элемента списка
-            @Override
-            public E next() {
-                return getElemByIndex(counter--);
             }
         };
     }

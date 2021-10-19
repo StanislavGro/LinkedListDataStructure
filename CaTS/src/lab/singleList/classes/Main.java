@@ -1,5 +1,7 @@
 package lab.singleList.classes;
 
+import lab.singleList.interfaces.TypeBuilder;
+
 import java.util.Iterator;
 import java.util.Random;
 
@@ -7,8 +9,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //Список с экземпляром класса
 
+        TypeBuilder integerTypeBuilder = TypeFactory.getBuilder("Integer");
+        TypeBuilder stringTypeBuilder = TypeFactory.getBuilder("String");
+
+        System.out.println(stringTypeBuilder.create(5));
+        System.out.println(integerTypeBuilder.create(16));
+
+        /*
+        //Список с экземпляром класса
         Random randomGenerator = new Random();
 
         singleList<exampleClass> list = new singleList<>();
@@ -75,6 +84,7 @@ public class Main {
 
         System.out.println("Размер списка: " + strList.getSize());
 
+         */
     }
 
 
