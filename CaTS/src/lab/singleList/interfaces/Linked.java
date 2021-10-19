@@ -1,5 +1,7 @@
 package lab.singleList.interfaces;
 
+import java.util.function.Consumer;
+
 public interface Linked<E>{
 
     void addFirst(E elem);
@@ -15,4 +17,5 @@ public interface Linked<E>{
 
     E getElemByIndex(int index);
     void setElemByIndex(E elem, int index);
+
 }

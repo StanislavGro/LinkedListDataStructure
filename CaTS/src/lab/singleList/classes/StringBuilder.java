@@ -11,13 +11,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class StringBuilder implements TypeBuilder {
 
+    public static int codeLength;
+
     @Override
     public String typeName() {
         return "String";
     }
 
     @Override
-    public Object create(int codeLength) {
+    public Object create() {
 
         int min = 65;// A
         int max = 90;// Z

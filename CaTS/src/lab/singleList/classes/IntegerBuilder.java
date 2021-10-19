@@ -8,13 +8,15 @@ import java.util.Random;
 
 public class IntegerBuilder implements TypeBuilder {
 
+    public static int range;
+
     @Override
     public String typeName() {
         return "Integer";
     }
 
     @Override
-    public Object create(int range) {
+    public Object create() {
 
         return (int)(Math.random()*range+1);
     }

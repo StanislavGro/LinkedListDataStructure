@@ -1,6 +1,7 @@
 package lab.singleList.classes;
 
 import lab.singleList.interfaces.TypeBuilder;
+import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Random;
@@ -9,12 +10,31 @@ public class Main {
 
     public static void main(String[] args) {
 
+        IntegerBuilder.range = 100;
+        StringBuilder.codeLength = 7;
 
         TypeBuilder integerTypeBuilder = TypeFactory.getBuilder("Integer");
         TypeBuilder stringTypeBuilder = TypeFactory.getBuilder("String");
 
-        System.out.println(stringTypeBuilder.create(5));
-        System.out.println(integerTypeBuilder.create(16));
+        if(integerTypeBuilder == null || stringTypeBuilder == null) return;
+
+        singleList<Object> integerList = new singleList<>();
+
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+        integerList.addLast(integerTypeBuilder.create());
+
+        integerList.forEach();
+
+        for (Object i : integerList) {
+            System.out.println(i);
+        }
+
+
 
         /*
         //Список с экземпляром класса

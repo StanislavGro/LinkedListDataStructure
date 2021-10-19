@@ -3,18 +3,19 @@ package lab.singleList.classes;
 import lab.singleList.interfaces.Linked;
 
 import java.util.Iterator;
+import java.util.function.Consumer;
 
-public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<E>{
+public class singleList<E> implements Linked<E>, Iterable<E>{
 
-    private Node<E> first;   //первый узел
-    private Node<E> last;    //последний узел
-    private Node<E> current; //текущий узел
+    private Node first;   //первый узел
+    private Node last;    //последний узел
+    private Node current; //текущий узел
 
     private int size = 0;
 
     //конструктор
     public singleList(){
-        current = new Node<>(null, null);
+        current = new Node(null, null);
         first = current;
         last = current;
     }
@@ -40,46 +41,13 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
         };
     }
 
-    //класс узла списка
-    private class Node<E extends Comparable<E>> implements Comparable<E>{
-
-        private E elem;
-        private Node<E> next;
-
-        //конструктор
-        private Node(E elem, Node<E> next){
-            this.elem = elem;
-            this.next = next;
-        }
-
-        //геттер элемента
-        public E getElem() {
-            return elem;
-        }
-
-        //сеттер элемента
-        public void setElem(E elem) {
-            this.elem = elem;
-        }
-
-        //геттер узла
-        public Node getNextNode(){
-            return next;
-        }
-
-        @Override
-        public int compareTo(E o) {
-            return elem.compareTo(o);
-        }
-    }
-
     //добавление в начало
     @Override
     public void addFirst(E elem) {
         if(size == 0)
             this.current.setElem(elem);
         else
-            first = new Node<>(elem, this.first);
+            first = new Node(elem, this.first);
 
         size++;
     }
@@ -90,7 +58,7 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
         if(size == 0)
             this.current.setElem(elem);
         else {
-            Node<E> newLastNode = new Node<>(elem, null);
+            Node newLastNode = new Node(elem, null);
             this.last.next = newLastNode;
             this.last = newLastNode;
         }
@@ -111,8 +79,8 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
         else if (index == size)
             this.addLast(elem);
         else {
-            Node<E> current2;
-            Node<E> newNodeElem = new Node<>(elem, null);
+            Node current2;
+            Node newNodeElem = new Node(elem, null);
 
             current = first;
 
@@ -139,7 +107,7 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
         else if (index == 0)
             first = first.next;
         else {
-            Node<E> current2;
+            Node current2;
 
             current = first;
 
@@ -190,17 +158,21 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
  */
 
         while (i <= j) {
+            /*
             while (this.getElemByIndex(i).compareTo(e)<0) {
                 i++;
             }
+            */
 
+            /*
             while (this.getElemByIndex(j).compareTo(e)>0) {
                 j--;
             }
+            */
 
             if (i <= j) {//меняем местами
 
-                Node<E> temp = new Node<>(this.getElemByIndex(i),null);
+                Node temp = new Node(this.getElemByIndex(i),null);
                 this.setElemByIndex(this.getElemByIndex(j),i);
                 this.setElemByIndex(temp.getElem(),j);
 
@@ -246,6 +218,39 @@ public class singleList<E extends Comparable<E>> implements Linked<E>, Iterable<
             }
             current.setElem(elem);
         }
+    }
+
+    public void forEach() {
+
+    }
+
+    //класс узла списка
+    private class Node {
+
+        private E elem;
+        private Node next;
+
+        //конструктор
+        private Node(E elem, Node next){
+            this.elem = elem;
+            this.next = next;
+        }
+
+        //геттер элемента
+        public E getElem() {
+            return elem;
+        }
+
+        //сеттер элемента
+        public void setElem(E elem) {
+            this.elem = elem;
+        }
+
+        //геттер узла
+        public Node getNextNode(){
+            return next;
+        }
+
     }
 
 }
