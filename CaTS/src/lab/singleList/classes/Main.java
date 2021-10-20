@@ -1,10 +1,12 @@
 package lab.singleList.classes;
 
+import lab.singleList.interfaces.Comparator;
 import lab.singleList.interfaces.TypeBuilder;
 import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class Main {
 
@@ -20,91 +22,18 @@ public class Main {
 
         singleList<Object> integerList = new singleList<>();
 
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
-        integerList.addLast(integerTypeBuilder.create());
+        for (int i = 0; i < 10; i++)
+            integerList.addLast(integerTypeBuilder.create());
 
-        integerList.forEach();
-
-        for (Object i : integerList) {
-            System.out.println(i);
-        }
-
-
-
-        /*
-        //Список с экземпляром класса
-        Random randomGenerator = new Random();
-
-        singleList<exampleClass> list = new singleList<>();
-
-        for (int i = 0; i < 8; i++)
-            list.add(new exampleClass(randomGenerator.nextInt(100) + 1),i);
-
-        System.out.println("\n** Результат до сортировки **\n");
-
-        for(exampleClass c: list){
-            System.out.println(c.i);
-        }
-
-        System.out.println("\n** Результат после сортировки **\n");
-
-        list.sort(0, list.getSize()-1); //ОБЯЗАТЕЛЬНО size-1 если сортируем до последнего элемента
-
-        for(exampleClass c: list){
-            System.out.println(c.i);
-        }
-
+        System.out.println("Before quickSort:");
+        integerList.forEach(System.out::println);
         System.out.println();
 
-        //Список с ссылочным типоп
+        integerList.sort(integerTypeBuilder.getComparator());
 
-        singleList<String> strList = new singleList<>();
-
-        strList.addFirst("You are Cool");
-
-        System.out.println("Размер строкового списка: " + strList.getSize());
-
-        strList.add("I LOVE YOU", 15); //вышли за размер - исключение
-
-        System.out.println("Размер списка:" + strList.getSize());
-
-        System.out.println("Значение списка с индексом 0: " + strList.getElemByIndex(0));
-        System.out.println("Значение списка с индексом 1: " + strList.getElemByIndex(1));
-
-        System.out.println("А теперь пуст? " + strList.isEmpty());
-
-        strList.add("Ur the best man", 1);
-        strList.add("You will succeed", 3);
-
-        System.out.println("\n*Финальные значения списка*");
-
-        System.out.println("Прямой итератор:\n");
-
-        for(String s: strList){
-            System.out.println(s);
-        }
-
+        System.out.println("After quickSort:");
+        integerList.forEach(System.out::println);
         System.out.println();
-
-        System.out.println("Обратный итератор:\n");
-
-        Iterator descendingIterator = strList.descendingIterator();
-
-        while (descendingIterator.hasNext())
-            System.out.println(descendingIterator.next());
-
-        System.out.println("\n*Удаления*");
-
-        strList.delete(0);
-
-        System.out.println("Размер списка: " + strList.getSize());
-
-         */
     }
 
 

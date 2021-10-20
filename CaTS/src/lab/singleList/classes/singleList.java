@@ -1,17 +1,24 @@
 package lab.singleList.classes;
 
+import lab.singleList.interfaces.Comparator;
+import lab.singleList.interfaces.someAction;
 import lab.singleList.interfaces.Linked;
 
-import java.util.Iterator;
-import java.util.function.Consumer;
-
-public class singleList<E> implements Linked<E>, Iterable<E>{
+public class singleList<E> implements Linked<E>{
 
     private Node first;   //первый узел
     private Node last;    //последний узел
     private Node current; //текущий узел
 
     private int size = 0;
+
+    public Node getFirst() {
+        return first;
+    }
+
+    public Node getLast() {
+        return last;
+    }
 
     //конструктор
     public singleList(){
@@ -20,43 +27,41 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
         last = current;
     }
 
-    //итератор по возрастанию
+    //поиск элемента по индексу
     @Override
-    public Iterator<E> iterator() {
-        return new Iterator<>() {
+    public E getElemByIndex(int index) {
 
-            int counter = 0;
-
-            //проверка на наличие следующего элемента
-            @Override
-            public boolean hasNext() {
-                return this.counter < size;
+        if(index>=size)
+            throw new NullPointerException("Вы вышли за пределы индексирования!");
+        else {
+            current = first;
+            for(int i = 0; i < index; i++){
+                current = current.next;
             }
+            return current.elem;
+        }
 
-            //получение следующего элемента списка
-            @Override
-            public E next() {
-                return getElemByIndex(counter++);
-            }
-        };
     }
 
-    //добавление в начало
+    //вставка в начало
     @Override
     public void addFirst(E elem) {
+
         if(size == 0)
-            this.current.setElem(elem);
+            this.current.elem = elem;
         else
             first = new Node(elem, this.first);
 
         size++;
+
     }
 
-    //добавление в конец
+    //вставка в конец
     @Override
     public void addLast(E elem) {
+
         if(size == 0)
-            this.current.setElem(elem);
+            this.current.elem = elem;
         else {
             Node newLastNode = new Node(elem, null);
             this.last.next = newLastNode;
@@ -66,32 +71,31 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
         size++;
     }
 
-    //добавление по порядковому номеру (индексу)
+    //вставка по порядковому номеру (индексу)
     @Override
     public void add(E elem, int index) {
 
-        if(index>size){
-            System.out.println("Вы вышли за размер списка! Поэтому добавим элемент просто в конец!");
+        if(index>=size){
+
+            if (index > size)
+                System.out.println("Вы вышли за размер списка! Поэтому добавим элемент просто в конец!");
+
             this.addLast(elem);
+
         }
         else if (index == 0)
             this.addFirst(elem);
-        else if (index == size)
-            this.addLast(elem);
         else {
-            Node current2;
-            Node newNodeElem = new Node(elem, null);
 
+            Node temp;
             current = first;
 
-            for(int i = 0; i < index-1; i++){
-                current = current.getNextNode();
-            }
+            for(int i = 0; i < index-1; i++)
+                current = current.next;
 
-            current2 = current.next;
+            temp = new Node(elem, current.next);
 
-            current.next = newNodeElem;
-            newNodeElem.next = current2;
+            current.next = temp;
 
             size++;
         }
@@ -102,31 +106,31 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
     @Override
     public void delete(int index) {
 
-        if(index>=size)
-            throw new NullPointerException("Вы вышли за пределы индексирования! Невозможно удалить этот элемент");
-        else if (index == 0)
-            first = first.next;
-        else {
-            Node current2;
+        if(size != 0) {
+            if (index >= size)
+                throw new NullPointerException("Вы вышли за пределы индексирования! Невозможно удалить этот элемент");
+            else if (index == 0) {
+                if(size == 1)
+                    current.elem = null;
+                else {
+                    first = first.next;
+                    current = first;
+                }
+            } else {
 
-            current = first;
+                current = first;
 
-            for(int i = 0; i < index-1; i++){
-                current = current.getNextNode();
+                for (int i = 0; i < index-1; i++)
+                    current = current.next;
+
+                current.next = (current.next).next;
+
             }
 
-            current2 = current.next.next;
-
-            current.next = current2;
+            size--;
         }
-
-        size--;
-    }
-
-    //геттер размера списка
-    @Override
-    public int getSize() {
-        return size;
+        else
+            throw new NullPointerException("Массив абослютно пуст!!!");
     }
 
     //проверка на пустоту
@@ -134,76 +138,10 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
         return (size==0);
     }
 
-    //сортировка
+    //геттер размера списка
     @Override
-    public void sort(int low, int high) {
-
-        if (size == 0)
-            return;//завершить выполнение, если длина списка равна 0
-
-        if (low >= high)
-            return;//завершить выполнение если уже нечего делить
-
-        // выбрать опорный элемент
-        int middle = low + (high - low) / 2;
-        E e = this.getElemByIndex(middle);
-
-        // разделить на подмассивы, который больше и меньше опорного элемента
-        int i = low, j = high;
-/*
-        if (this.getElemByIndex(i).compareTo(e)==1) {
-            i++;
-        }
-
- */
-
-        while (i <= j) {
-            /*
-            while (this.getElemByIndex(i).compareTo(e)<0) {
-                i++;
-            }
-            */
-
-            /*
-            while (this.getElemByIndex(j).compareTo(e)>0) {
-                j--;
-            }
-            */
-
-            if (i <= j) {//меняем местами
-
-                Node temp = new Node(this.getElemByIndex(i),null);
-                this.setElemByIndex(this.getElemByIndex(j),i);
-                this.setElemByIndex(temp.getElem(),j);
-
-                i++;
-                j--;
-            }
-        }
-
-        // вызов рекурсии для сортировки левой и правой части
-        if (low < j)
-            sort(low, j);
-
-        if (high > i)
-            sort(i, high);
-
-    }
-
-    //получение элемента по индексу из списка
-    @Override
-    public E getElemByIndex(int index) {
-
-        if(index>=size)
-            throw new NullPointerException("Вы вышли за пределы индексирования!");
-        else {
-            current = first;
-            for(int i = 0; i < index; i++){
-                current = current.getNextNode();
-            }
-            return current.getElem();
-        }
-
+    public int getSize() {
+        return size;
     }
 
     //замена индексного элемента
@@ -213,15 +151,87 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
             throw new NullPointerException("Вы вышли за пределы индексирования!");
         else {
             current = first;
-            for(int i = 0; i < index; i++){
-                current = current.getNextNode();
-            }
-            current.setElem(elem);
+            for(int i = 0; i < index; i++)
+                current = current.next;
+            current.elem = elem;
         }
     }
 
-    public void forEach() {
+    public void sort(Comparator comparator) {
+        first = mergeSort(first, comparator);
+        last = getNode(size - 1);
+    }
 
+    private Node mergeSort(Node h, Comparator comparator)
+    {
+        if (h == null || h.next == null) {
+            return h;
+        }
+
+        Node middle = getMiddle(h);
+        Node middleNext = middle.next;
+
+        middle.next = null;
+
+        Node left = mergeSort(h, comparator);
+
+        Node right = mergeSort(middleNext, comparator);
+
+        return sortedMerge(left, right, comparator);
+    }
+
+    private Node sortedMerge(Node a, Node b, Comparator comparator)
+    {
+        Node result;
+        if (a == null)
+            return b;
+        if (b == null)
+            return a;
+
+        if (comparator.compare(a.elem, b.elem) <= 0) {
+            result = a;
+            result.next = sortedMerge(a.next, b, comparator);
+        }
+        else {
+            result = b;
+            result.next = sortedMerge(a, b.next, comparator);
+        }
+        return result;
+    }
+
+    private Node getNode(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        Node tmp = first;
+
+        for (int i = 0; i < index; i++) {
+            tmp = tmp.next;
+        }
+        return tmp;
+    }
+
+    private Node getMiddle(Node h)
+    {
+        if (h == null)
+            return null;
+        Node fast = h.next;
+        Node slow = h;
+
+        while (fast != null) {
+            fast = fast.next;
+            if (fast != null) {
+                slow = slow.next;
+                fast = fast.next;
+            }
+        }
+        return slow;
+    }
+
+    public void forEach(someAction<E> someAction) {
+        Node temp = first;
+        for(int i = 0; i < size; i++) {
+            someAction.toDo(temp.elem);
+            temp = temp.next;
+        }
     }
 
     //класс узла списка
@@ -251,6 +261,12 @@ public class singleList<E> implements Linked<E>, Iterable<E>{
             return next;
         }
 
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "elem=" + elem +
+                    '}';
+        }
     }
 
 }

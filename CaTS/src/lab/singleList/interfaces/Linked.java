@@ -1,5 +1,7 @@
 package lab.singleList.interfaces;
 
+import lab.singleList.classes.singleList;
+
 import java.util.function.Consumer;
 
 public interface Linked<E>{
@@ -12,8 +14,6 @@ public interface Linked<E>{
     int getSize();
 
     boolean isEmpty();
-
-    void sort(int low, int high);
 
     E getElemByIndex(int index);
     void setElemByIndex(E elem, int index);

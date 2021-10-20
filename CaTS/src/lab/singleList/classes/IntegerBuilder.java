@@ -17,7 +17,6 @@ public class IntegerBuilder implements TypeBuilder {
 
     @Override
     public Object create() {
-
         return (int)(Math.random()*range+1);
     }
 
