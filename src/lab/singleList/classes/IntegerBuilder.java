@@ -4,8 +4,6 @@ package lab.singleList.classes;
 import lab.singleList.interfaces.Comparator;
 import lab.singleList.interfaces.TypeBuilder;
 
-import java.util.Random;
-
 public class IntegerBuilder implements TypeBuilder {
 
     public static int range;
