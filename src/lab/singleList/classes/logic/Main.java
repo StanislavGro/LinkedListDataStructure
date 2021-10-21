@@ -1,5 +1,6 @@
 package lab.singleList.classes.logic;
 
+import lab.singleList.classes.gui.GUI;
 import lab.singleList.interfaces.TypeBuilder;
 
 import java.io.*;
@@ -8,6 +9,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
+        new GUI();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -109,7 +112,7 @@ public class Main {
                         ObjectOutputStream oos = null;
 
                         try {
-                            FileOutputStream fos = new FileOutputStream("file.data");
+                            FileOutputStream fos = new FileOutputStream("cliFile.data");
                             if(fos!=null) {
                                 oos = new ObjectOutputStream(fos);
                                 Serialization serialization = new Serialization(list);
@@ -138,7 +141,7 @@ public class Main {
                 case(8):
 
                     try {
-                        FileInputStream fis = new FileInputStream("file.data");
+                        FileInputStream fis = new FileInputStream("cliFile.data");
                         ObjectInputStream ois = new ObjectInputStream(fis);
 
                         Serialization serialization = (Serialization) ois.readObject();
