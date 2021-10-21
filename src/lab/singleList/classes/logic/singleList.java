@@ -1,24 +1,18 @@
-package lab.singleList.classes;
+package lab.singleList.classes.logic;
 
 import lab.singleList.interfaces.Comparator;
 import lab.singleList.interfaces.someAction;
 import lab.singleList.interfaces.Linked;
 
-public class singleList<E> implements Linked<E>{
+import java.io.Serializable;
+
+public class singleList<E> implements Linked<E>, Serializable {
 
     private Node first;   //первый узел
     private Node last;    //последний узел
     private Node current; //текущий узел
 
     private int size = 0;
-
-    public Node getFirst() {
-        return first;
-    }
-
-    public Node getLast() {
-        return last;
-    }
 
     //конструктор
     public singleList(){
@@ -127,6 +121,11 @@ public class singleList<E> implements Linked<E>{
 
             }
 
+            while (current.next!=null)
+                current = current.next;
+
+            last = current;
+
             size--;
         }
         else
@@ -227,15 +226,20 @@ public class singleList<E> implements Linked<E>{
     }
 
     public void forEach(someAction<E> someAction) {
-        Node temp = first;
-        for(int i = 0; i < size; i++) {
-            someAction.toDo(temp.elem);
-            temp = temp.next;
+
+        if(size != 0) {
+            Node temp = first;
+            for (int i = 0; i < size; i++) {
+                someAction.toDo(temp.elem);
+                temp = temp.next;
+            }
         }
+        else
+            System.out.println("**Пусто**");
     }
 
     //класс узла списка
-    private class Node {
+    private class Node implements Serializable {
 
         private E elem;
         private Node next;

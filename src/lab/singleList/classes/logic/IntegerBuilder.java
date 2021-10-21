@@ -1,4 +1,4 @@
-package lab.singleList.classes;
+package lab.singleList.classes.logic;
 
 
 import lab.singleList.interfaces.Comparator;
@@ -6,7 +6,7 @@ import lab.singleList.interfaces.TypeBuilder;
 
 public class IntegerBuilder implements TypeBuilder {
 
-    public static int range;
+    public static int range = 100;
 
     @Override
     public String typeName() {

@@ -1,4 +1,4 @@
-package lab.singleList.classes;
+package lab.singleList.classes.logic;
 
 import lab.singleList.interfaces.TypeBuilder;
 

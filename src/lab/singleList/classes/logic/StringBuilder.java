@@ -1,4 +1,4 @@
-package lab.singleList.classes;
+package lab.singleList.classes.logic;
 
 import lab.singleList.interfaces.Comparator;
 import lab.singleList.interfaces.TypeBuilder;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class StringBuilder implements TypeBuilder {
 
-    public static int codeLength;
+    public static int codeLength = 8;
 
     @Override
     public String typeName() {
