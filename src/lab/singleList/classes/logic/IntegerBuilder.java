@@ -23,13 +23,4 @@ public class IntegerBuilder implements TypeBuilder {
         return ((o1, o2) -> (Integer)o1-(Integer)o2);
     }
 
-    @Override
-    public Object read() {
-        return null;
-    }
-
-    @Override
-    public void write() {
-
-    }
 }

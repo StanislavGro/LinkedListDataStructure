@@ -48,14 +48,4 @@ public class StringBuilder implements TypeBuilder {
         return ((o1, o2) -> ((String)o1).compareTo((String)o2));
     }
 
-    @Override
-    public Object read() {
-        return null;
-    }
-
-    @Override
-    public void write() {
-
-    }
-
 }
