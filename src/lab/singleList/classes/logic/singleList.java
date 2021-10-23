@@ -143,6 +143,17 @@ public class singleList<E> implements Linked<E>, Serializable {
         return size;
     }
 
+    public void setNewSize() {
+
+        size = 0;
+        current = first;
+
+        while(current!=null){
+            size++;
+            current = current.next;
+        }
+    }
+
     //замена индексного элемента
     @Override
     public void setElemByIndex(E elem, int index) {

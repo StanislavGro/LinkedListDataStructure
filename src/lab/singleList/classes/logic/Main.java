@@ -112,7 +112,13 @@ public class Main {
                         ObjectOutputStream oos = null;
 
                         try {
-                            FileOutputStream fos = new FileOutputStream("cliFile.data");
+                            FileOutputStream fos;
+
+                            if(builder.typeName() == "String")
+                                fos = new FileOutputStream("guiStringFile.data");
+                            else
+                                fos = new FileOutputStream("guiIntegerFile.data");
+
                             if(fos!=null) {
                                 oos = new ObjectOutputStream(fos);
                                 Serialization serialization = new Serialization(list);
@@ -141,7 +147,13 @@ public class Main {
                 case(8):
 
                     try {
-                        FileInputStream fis = new FileInputStream("cliFile.data");
+                        FileInputStream fis;
+
+                        if(builder.typeName() == "String")
+                            fis = new FileInputStream("guiStringFile.data");
+                        else
+                            fis = new FileInputStream("guiIntegerFile.data");
+
                         ObjectInputStream ois = new ObjectInputStream(fis);
 
                         Serialization serialization = (Serialization) ois.readObject();

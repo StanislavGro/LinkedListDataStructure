@@ -7,17 +7,20 @@ import lab.singleList.interfaces.TypeBuilder;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class GUI extends JFrame implements KeyListener {
 
+    public static singleList<Object> singleList = new singleList<>();
+    public static ArrayList<Object> arrayList;
+    public static TypeBuilder typeBuilder;
+
     public dialogWindow dialog;
-    public singleList<Object> singleList = new singleList<>();
-    public TypeBuilder typeBuilder;
+    public Drawing draw;
+    private Point clickedMousePosition, releaseMousePosition;
+
 
     private JMenuBar jMenuBar;
     private JMenu jFile;
@@ -31,16 +34,72 @@ public class GUI extends JFrame implements KeyListener {
     private JMenuItem jDeleteByIndex;
     private JMenuItem jSortList;
 
+    public static int Width = 1100;
+    public static int Height = 650;
 
     public GUI(){
 
         super("List");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        setPreferredSize(new Dimension(1080, 600));
+        setPreferredSize(new Dimension(Width, Height));
+
+        setLayout(new BorderLayout());
 
         dialog = new dialogWindow(this);
 
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_LEFT:
+                        draw.cameraPosition.x += 10;
+                        draw.Paint();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        draw.cameraPosition.x -= 10;
+                        draw.Paint();
+                        break;
+                    case KeyEvent.VK_UP:
+                        draw.cameraPosition.y += 10;
+                        draw.Paint();
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        draw.cameraPosition.y -= 10;
+                        draw.Paint();
+                        break;
+                    //case  KeyEvent.VK_F:
+
+                }
+            }
+        });
+
+        clickedMousePosition = new Point();
+        releaseMousePosition = new Point();
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                clickedMousePosition = e.getPoint();
+            }
+        });
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                releaseMousePosition = e.getPoint();
+                draw.cameraPosition.x += releaseMousePosition.x - clickedMousePosition.x;
+                draw.cameraPosition.y += releaseMousePosition.y - clickedMousePosition.y;
+                clickedMousePosition = releaseMousePosition;
+                draw.Paint();
+            }
+        });
+
+        draw = new Drawing();
+
+        this.add(draw);
 
         jMenuBar = new JMenuBar();
         jFile = new JMenu("File");
@@ -89,7 +148,13 @@ public class GUI extends JFrame implements KeyListener {
                 ObjectOutputStream oos = null;
 
                 try {
-                    FileOutputStream fos = new FileOutputStream("guiFile.data");
+                    FileOutputStream fos;
+
+                    if(typeBuilder.typeName() == "String")
+                        fos = new FileOutputStream("guiStringFile.data");
+                    else
+                        fos = new FileOutputStream("guiIntegerFile.data");
+
                     if(fos!=null) {
                         oos = new ObjectOutputStream(fos);
                         Serialization serialization = new Serialization(singleList);
@@ -117,7 +182,12 @@ public class GUI extends JFrame implements KeyListener {
 
         jFLoad.addActionListener(e -> {
             try {
-                FileInputStream fis = new FileInputStream("guiFile.data");
+                FileInputStream fis;
+
+                if(typeBuilder.typeName() == "String")
+                    fis = new FileInputStream("guiStringFile.data");
+                else
+                    fis = new FileInputStream("guiIntegerFile.data");
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
                 Serialization serialization = (Serialization) ois.readObject();
@@ -132,15 +202,18 @@ public class GUI extends JFrame implements KeyListener {
                 exception.printStackTrace();
             }
 
+            singleList.setNewSize();
+            createArray();
+            draw.Paint();
+
             jFSave.setEnabled(true);
             jInsertInEnd.setEnabled(true);
             jInsertByIndex.setEnabled(true);
             jDeleteByIndex.setEnabled(true);
             jSort.setEnabled(true);
 
-
-            System.out.println();
-            singleList.forEach(System.out::println);
+            //System.out.println();
+            //singleList.forEach(System.out::println);
 
         });
 
@@ -166,26 +239,27 @@ public class GUI extends JFrame implements KeyListener {
             btnOK.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    {
-                        int offset = 0;
-                        try {
-                            offset = consoleArea.getLineOfOffset(consoleArea.getCaretPosition());
-                            int start = consoleArea.getLineStartOffset(offset);
-                            int end = consoleArea.getLineEndOffset(offset);
-                            String command = consoleArea.getText(start, end - start);
-                            offset = Integer.parseInt(command);
-                        } catch (BadLocationException ex) {
-                            ex.printStackTrace();
-                        }
 
-                        for (int i = 0; i < offset; i++)
-                            singleList.addLast(typeBuilder.create());
-
-
-                        jDialog.dispose();
-
+                    int offset = 0;
+                    try {
+                        offset = consoleArea.getLineOfOffset(consoleArea.getCaretPosition());
+                        int start = consoleArea.getLineStartOffset(offset);
+                        int end = consoleArea.getLineEndOffset(offset);
+                        String command = consoleArea.getText(start, end - start);
+                        offset = Integer.parseInt(command);
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
                     }
+
+                    for (int i = 0; i < offset; i++)
+                        singleList.addLast(typeBuilder.create());
+
+                    createArray();
+                    draw.Paint();
+                    jDialog.dispose();
+
                 }
+
             });
 
             jDialog.pack();
@@ -200,8 +274,8 @@ public class GUI extends JFrame implements KeyListener {
             jDeleteByIndex.setEnabled(true);
             jSort.setEnabled(true);
 
-            System.out.println();
-            singleList.forEach(System.out::println);
+            //System.out.println();
+            //singleList.forEach(System.out::println);
 
         });
 
@@ -242,13 +316,17 @@ public class GUI extends JFrame implements KeyListener {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     {
+                        String command = "NULL";
                         int number = 0;
                         try {
                             number = consoleArea.getLineOfOffset(consoleArea.getCaretPosition());
                             int start = consoleArea.getLineStartOffset(number);
                             int end = consoleArea.getLineEndOffset(number);
-                            String command = consoleArea.getText(start, end - start);
-                            number = Integer.parseInt(command);
+                            command = consoleArea.getText(start, end - start);
+
+                            if(typeBuilder.typeName()=="Integer") {
+                                number = Integer.parseInt(command);
+                            }
                         } catch (BadLocationException ex) {
                             ex.printStackTrace();
                         }
@@ -258,17 +336,21 @@ public class GUI extends JFrame implements KeyListener {
                             number2 = consoleArea2.getLineOfOffset(consoleArea2.getCaretPosition());
                             int start = consoleArea2.getLineStartOffset(number2);
                             int end = consoleArea2.getLineEndOffset(number2);
-                            String command = consoleArea2.getText(start, end - start);
-                            number2 = Integer.parseInt(command);
+                            String command2 = consoleArea2.getText(start, end - start);
+                            number2 = Integer.parseInt(command2);
                             if(typeBuilder.typeName()=="Integer"){
                                 singleList.add(number, number2);
                             }
                             else {
                                 singleList.add(command, number2);
                             }
+
                         } catch (BadLocationException ex) {
                             ex.printStackTrace();
                         }
+
+                        createArray();
+                        draw.Paint();
 
                         jDialog.dispose();
 
@@ -288,10 +370,8 @@ public class GUI extends JFrame implements KeyListener {
             jDeleteByIndex.setEnabled(true);
             jSort.setEnabled(true);
 
-            System.out.println();
-            singleList.forEach(System.out::println);
-
-
+            //System.out.println();
+            //singleList.forEach(System.out::println);
 
         });
 
@@ -330,8 +410,8 @@ public class GUI extends JFrame implements KeyListener {
                             int start = consoleArea.getLineStartOffset(number);
                             int end = consoleArea.getLineEndOffset(number);
                             String command = consoleArea.getText(start, end - start);
-                            number = Integer.parseInt(command);
                             if(typeBuilder.typeName()=="Integer"){
+                                number = Integer.parseInt(command);
                                 singleList.addLast(number);
                             }
                             else {
@@ -340,6 +420,9 @@ public class GUI extends JFrame implements KeyListener {
                         } catch (BadLocationException ex) {
                             ex.printStackTrace();
                         }
+
+                        createArray();
+                        draw.Paint();
 
                         jDialog.dispose();
 
@@ -359,8 +442,8 @@ public class GUI extends JFrame implements KeyListener {
             jDeleteByIndex.setEnabled(true);
             jSort.setEnabled(true);
 
-            System.out.println();
-            singleList.forEach(System.out::println);
+            //System.out.println();
+            //singleList.forEach(System.out::println);
 
 
         });
@@ -399,6 +482,8 @@ public class GUI extends JFrame implements KeyListener {
                         }
 
                         singleList.delete(offset);
+                        createArray();
+                        draw.Paint();
                         jDialog.dispose();
 
                     }
@@ -417,16 +502,30 @@ public class GUI extends JFrame implements KeyListener {
             jDeleteByIndex.setEnabled(true);
             jSort.setEnabled(true);
 
-            System.out.println();
-            singleList.forEach(System.out::println);
+            //System.out.println();
+            //singleList.forEach(System.out::println);
         });
 
         jSortList.addActionListener(e -> {
             singleList.sort(typeBuilder.getComparator());
-            System.out.println();
-            singleList.forEach(System.out::println);
+            createArray();
+            draw.Paint();
+            //System.out.println();
+            //singleList.forEach(System.out::println);
 
         });
+
+    }
+
+    public void createArray() {
+
+        arrayList = new ArrayList<>();
+
+        for(int i = 0; i < singleList.getSize(); i++){
+
+            arrayList.add(singleList.getElemByIndex(i));
+
+        }
 
     }
 
