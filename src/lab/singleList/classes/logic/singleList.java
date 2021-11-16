@@ -168,44 +168,125 @@ public class singleList<E> implements Linked<E>, Serializable {
     }
 
     public void sort(Comparator comparator) {
+        long lastTime = System.currentTimeMillis();
         first = mergeSort(first, comparator);
+        System.out.println("Программа выполнилась за " + (System.currentTimeMillis()-lastTime) + " милисекунд(-ы)");;
         last = getNode(size - 1);
     }
 
     private Node mergeSort(Node h, Comparator comparator)
     {
-        if (h == null || h.next == null) {
+        if(h == null)
+            return null;
+        else if(h.next==null)
             return h;
+
+        Node a = h, newH = null, Pair = null;
+        int number = 1;
+
+        while(number<size) {
+
+            for (int i = 0; i < size; i=i+2*number) {
+                if(newH!=null) {
+                    if (Pair != null) {
+                        Pair = newH;
+                        for(int k = 0; k < i-1; k++)
+                            Pair = Pair.next;
+                        Pair.next = sortIt(a, i, number, comparator); //сравнивает пары и создает последовательность отсортированных узлов
+                    }
+                    else {
+                        Pair = sortIt(a, i, number, comparator); //сравнивает пары и создает последовательность отсортированных узлов
+                        newH = Pair;
+                    }
+                    Pair = Pair.next;
+                }
+                else {
+                    newH = sortIt(a, i, number, comparator); //сравнивает пары и создает последовательность отсортированных узлов
+                    Pair = newH;
+                }
+            }
+
+            //newH = Pair;
+            number*=2;
+            a=newH;
+            Pair = null;
         }
 
-        Node middle = getMiddle(h);
-        Node middleNext = middle.next;
+        return newH;
 
-        middle.next = null;
-
-        Node left = mergeSort(h, comparator);
-
-        Node right = mergeSort(middleNext, comparator);
-
-        return sortedMerge(left, right, comparator);
     }
 
-    private Node sortedMerge(Node a, Node b, Comparator comparator)
-    {
-        Node result;
-        if (a == null)
-            return b;
-        if (b == null)
-            return a;
+    private Node sortIt(Node a, int iter,int number, Comparator comparator){
 
-        if (comparator.compare(a.elem, b.elem) <= 0) {
-            result = a;
-            result.next = sortedMerge(a.next, b, comparator);
+        int temp = iter, temp2 = number, aNum = 0, bNum = 0;
+
+        while(a!=null && temp!=0){
+            a = a.next;
+            temp-=1;
         }
-        else {
-            result = b;
-            result.next = sortedMerge(a, b.next, comparator);
+
+        Node b = a, result = null, resultLink = null;
+
+        while(b!=null && temp2!=0){
+            b = b.next;
+            temp2-=1;
         }
+
+        if(b !=null) {
+            while (true) {
+                if (aNum != number && bNum != number && a != null && b!=null) {
+                    if (comparator.compare(a.elem, b.elem) <= 0) {
+                        if (result != null) {
+                            resultLink.next = new Node(a.elem, null);
+                            resultLink = resultLink.next;
+                        }
+                        else {
+                            result = new Node(a.elem, null);
+                            resultLink = result;
+                        }
+                        aNum += 1;
+                        a = a.next;
+                    } else {
+                        if (result != null){
+                            resultLink.next = new Node(b.elem, null);
+                            resultLink = resultLink.next;
+                        }
+                        else {
+                            result = new Node(b.elem, null);
+                            resultLink = result;
+                        }
+                        bNum += 1;
+                        b = b.next;
+                    }
+                } else if (aNum != number && a!=null) {
+                    resultLink.next = new Node(a.elem,null);
+                    resultLink = resultLink.next;
+                    a = a.next;
+                    aNum+=1;
+                } else if (bNum != number && b != null) {
+                    resultLink.next = new Node(b.elem,null);
+                    resultLink = resultLink.next;
+                    b = b.next;
+                    bNum+=1;
+                } else
+                    break;
+            }
+        }
+        else{
+            while (aNum != number && a!=null){
+                if (result != null) {
+                    resultLink.next = new Node(a.elem, null);
+                    resultLink = resultLink.next;
+                }
+                else {
+                    result = new Node(a.elem, null);
+                    resultLink = result;
+                }
+                aNum += 1;
+                a = a.next;
+            }
+        }
+
         return result;
     }
 
@@ -217,23 +298,6 @@ public class singleList<E> implements Linked<E>, Serializable {
             tmp = tmp.next;
         }
         return tmp;
-    }
-
-    private Node getMiddle(Node h)
-    {
-        if (h == null)
-            return null;
-        Node fast = h.next;
-        Node slow = h;
-
-        while (fast != null) {
-            fast = fast.next;
-            if (fast != null) {
-                slow = slow.next;
-                fast = fast.next;
-            }
-        }
-        return slow;
     }
 
     public void forEach(someAction<E> someAction) {

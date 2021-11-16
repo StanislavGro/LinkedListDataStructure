@@ -21,7 +21,7 @@ public class StringBuilder implements TypeBuilder {
         int min = 65;// A
         int max = 90;// Z
 
-        java.lang.StringBuilder sb = new java.lang.StringBuilder(codeLength);
+        java.lang.StringBuffer sb = new java.lang.StringBuffer(codeLength);
 
         Random random = new SecureRandom();
 
