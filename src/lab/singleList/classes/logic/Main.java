@@ -2,8 +2,10 @@ package lab.singleList.classes.logic;
 
 import lab.singleList.classes.gui.GUI;
 import lab.singleList.interfaces.TypeBuilder;
+import lab.singleList.classes.logic.superList;
 
 import java.io.*;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -102,7 +104,11 @@ public class Main {
 
                     break;
                 case(6):
-                    list.sort(builder.getComparator());
+                    superList sList = new superList();                  // создаем суперлист
+                    long timeStart = new Date().getTime();              //считываем время начала
+                    list = sList.sort(list, builder.getComparator());   //сортируем список слиянием
+                    long timeEnd = new Date().getTime();                //считываем время окончания работы сортировки
+                    System.out.println("Программа выполнилась за " + (timeEnd-timeStart) + " миллисекунд(-ы)");
                     break;
                 case(7):
 

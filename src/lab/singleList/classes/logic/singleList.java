@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public class singleList<E> implements Linked<E>, Serializable {
 
-    private Node first;   //первый узел
-    private Node last;    //последний узел
-    private Node current; //текущий узел
+    public Node first;   //первый узел
+    public Node last;    //последний узел
+    public Node current; //текущий узел
 
     private int size = 0;
 
@@ -19,6 +19,13 @@ public class singleList<E> implements Linked<E>, Serializable {
         current = new Node(null, null);
         first = current;
         last = current;
+    }
+
+    public singleList(E elem){
+        current = new Node(null, null);
+        first = current;
+        last = current;
+        addLast(elem);
     }
 
     //поиск элемента по индексу
@@ -167,15 +174,99 @@ public class singleList<E> implements Linked<E>, Serializable {
         }
     }
 
+    public singleList merge(singleList secondList, Comparator comparator){
+
+        singleList out = new singleList();
+
+        while (first != null && secondList.first != null){
+            if (comparator.compare(first.elem, secondList.first.elem) < 0){
+                out.addLast(first.elem);
+                first = first.next;
+            }
+            else{
+                out.addLast(secondList.first.elem);
+                secondList.first = secondList.first.next;
+            }
+        }
+        while(first != null){
+            out.addLast(first.elem);
+            first = first.next;
+        }
+        while(secondList.first != null){
+            out.addLast(secondList.first.elem);
+            secondList.first = secondList.first.next;
+        }
+        return out;
+    }
+
+    private Node getNode(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        Node tmp = first;
+
+        for (int i = 0; i < index; i++) {
+            tmp = tmp.next;
+        }
+        return tmp;
+    }
+
+    public void forEach(someAction<E> someAction) {
+
+        if(size != 0) {
+            Node temp = first;
+            for (int i = 0; i < size; i++) {
+                someAction.toDo(temp.elem);
+                temp = temp.next;
+            }
+        }
+        else
+            System.out.println("**Пусто**");
+    }
+
+    //класс узла списка
+    public class Node implements Serializable {
+
+        public E elem;
+        public Node next;
+
+        //конструктор
+        private Node(E elem, Node next){
+            this.elem = elem;
+            this.next = next;
+        }
+
+        //геттер элемента
+        public E getElem() {
+            return elem;
+        }
+
+        //сеттер элемента
+        public void setElem(E elem) {
+            this.elem = elem;
+        }
+
+        //геттер узла
+        public Node getNextNode(){
+            return next;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "elem=" + elem +
+                    '}';
+        }
+    }
+
+}
+/*
     public void sort(Comparator comparator) {
-        long lastTime = System.currentTimeMillis();
         first = mergeSort(first, comparator);
-        System.out.println("Программа выполнилась за " + (System.currentTimeMillis()-lastTime) + " милисекунд(-ы)");;
         last = getNode(size - 1);
     }
 
-    private Node mergeSort(Node h, Comparator comparator)
-    {
+ */
+/*
+    private Node mergeSort(Node h, Comparator comparator) {
         if(h == null)
             return null;
         else if(h.next==null)
@@ -215,7 +306,8 @@ public class singleList<E> implements Linked<E>, Serializable {
         return newH;
 
     }
-
+*/
+/*
     private Node sortIt(Node a, int iter,int number, Comparator comparator){
 
         int temp = iter, temp2 = number, aNum = 0, bNum = 0;
@@ -289,63 +381,4 @@ public class singleList<E> implements Linked<E>, Serializable {
 
         return result;
     }
-
-    private Node getNode(int index) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
-        Node tmp = first;
-
-        for (int i = 0; i < index; i++) {
-            tmp = tmp.next;
-        }
-        return tmp;
-    }
-
-    public void forEach(someAction<E> someAction) {
-
-        if(size != 0) {
-            Node temp = first;
-            for (int i = 0; i < size; i++) {
-                someAction.toDo(temp.elem);
-                temp = temp.next;
-            }
-        }
-        else
-            System.out.println("**Пусто**");
-    }
-
-    //класс узла списка
-    private class Node implements Serializable {
-
-        private E elem;
-        private Node next;
-
-        //конструктор
-        private Node(E elem, Node next){
-            this.elem = elem;
-            this.next = next;
-        }
-
-        //геттер элемента
-        public E getElem() {
-            return elem;
-        }
-
-        //сеттер элемента
-        public void setElem(E elem) {
-            this.elem = elem;
-        }
-
-        //геттер узла
-        public Node getNextNode(){
-            return next;
-        }
-
-        @Override
-        public String toString() {
-            return "Node{" +
-                    "elem=" + elem +
-                    '}';
-        }
-    }
-
-}
+     */

@@ -2,6 +2,7 @@ package lab.singleList.classes.gui;
 
 import lab.singleList.classes.logic.Serialization;
 import lab.singleList.classes.logic.singleList;
+import lab.singleList.classes.logic.superList;
 import lab.singleList.interfaces.TypeBuilder;
 
 import javax.swing.*;
@@ -507,7 +508,8 @@ public class GUI extends JFrame implements KeyListener {
         });
 
         jSortList.addActionListener(e -> {
-            singleList.sort(typeBuilder.getComparator());
+            superList sList = new superList();
+            singleList = sList.sort(singleList, typeBuilder.getComparator());
             createArray();
             draw.Paint();
             //System.out.println();
