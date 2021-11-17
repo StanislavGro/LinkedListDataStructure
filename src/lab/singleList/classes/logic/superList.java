@@ -4,7 +4,7 @@ import lab.singleList.interfaces.Comparator;
 
 public class superList {
 
-    superElem first = null, last = null;
+    superNode first = null, last = null;
 
     public void create(singleList inputList){
         for(singleList.Node p = inputList.first; p != null; p = p.next)
@@ -13,9 +13,9 @@ public class superList {
 
     public void add(singleList list){
         if (first == null)
-            first = last = new superElem(list);
+            first = last = new superNode(list);
         else{
-            last.next = new superElem(list);
+            last.next = new superNode(list);
             last = last.next;
         }
     }
@@ -26,7 +26,7 @@ public class superList {
 
         do {
 
-            superElem temp = first;
+            superNode temp = first;
 
             while(first != null && first.next != null){
                 first.data = first.data.merge(first.next.data,comparator);
@@ -42,12 +42,12 @@ public class superList {
         return first.data;
     }
 
-    public class superElem{
+    public class superNode{
 
         public singleList data;
-        public superElem next;
+        public superNode next;
 
-        public superElem(singleList data) {
+        public superNode(singleList data) {
             this.data = data;
             this.next = null;
         }
